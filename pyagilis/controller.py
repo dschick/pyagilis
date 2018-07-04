@@ -269,3 +269,41 @@ class AGUC8(object):
             steps.append(step)
         self.mThread.steps = steps
         self.mThread.start()
+        
+class AGP(object):
+    
+    def __init__(self,portName):
+        
+        self.port = AGPort(portName)
+    
+    def moveAbsolute(self,d):
+        
+        self.port.sendString('1PA' + str(d) + '\r\n')
+        
+    def moveRelative(self,d):
+        
+        self.port.sendString('1PR' + str(d) + '\r\n')
+        
+    def stop(self):
+        
+        self.port.sendString('1ST\r\n')
+        
+    def home(self):
+        
+        self.port.sendString('1OR\r\n')
+        
+    def getCurrentPosition(self):
+        
+        return float(self.port.sendString('1TP?\r\n'))
+        
+    def getStatus(self):
+        status = (self.port.sendString('1TS?\r\n'))
+        
+        if (status == '00000A') or (status == '00000B')  or (status == '00000C') or (status == '00000D') or (status == '00000E') or (status == '00000F'):
+            return 0 # not referenced
+        elif (status == '000032') or (status == '000033')  or (status == '000034'): # ready from homing or moving or disabled
+            return 1
+        elif (status == '00001E') or (status == '000028'): # homing or moving
+            return 2
+        elif (status == '00003C') or (status == '00003D'): # error
+            return 3

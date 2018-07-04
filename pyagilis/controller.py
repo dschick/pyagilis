@@ -10,8 +10,8 @@
 #
 #
 
-from channel import Axis,RATE
-from mothreading import MotorThread
+from pyagilis.channel import Axis,RATE
+from pyagilis.mothreading import MotorThread
 
 from pyagilis.agPort import AGPort
 
@@ -269,6 +269,7 @@ class AGUC8(object):
             steps.append(step)
         self.mThread.steps = steps
         self.mThread.start()
+        
         
 class AGP(object):
     

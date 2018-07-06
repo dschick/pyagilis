@@ -330,8 +330,8 @@ class AGAP(object):
         self.port.sendString('1ST\r\n')
                 
     def getCurrentPosition(self):
-        posU, posV = self.port.sendString('1TP?\r\n')
-        return float(posU), float(posV)
+        pos = self.port.sendString('1TP?\r\n').split(',')        
+        return (float(pos[0]), float(pos[1]))
     
     def getSystemResolution(self):
         
@@ -339,7 +339,6 @@ class AGAP(object):
         
     def getStatus(self):
         status = (self.port.sendString('1TS?\r\n'))
-        print(status)
         
         if (status == '000014') :
             return 0 # configuration

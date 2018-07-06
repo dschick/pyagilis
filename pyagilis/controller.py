@@ -315,10 +315,15 @@ class AGAP(object):
         
         self.port = AGPort(portName)
     
-    def moveAbsolute(self,dU,dV):
+    def moveAbsolute(self,motionInfo):
         
-        self.port.sendString('1PAU' + str(dU) + '\r\n')
-        self.port.sendString('1PAV' + str(dV) + '\r\n')
+        for axis, pos in motionInfo:
+            if axis == 0:
+                self.port.sendString('1PAU' + str(pos) + '\r\n')
+            elif axis == 1:
+                self.port.sendString('1PAV' + str(pos) + '\r\n')
+            else:
+                pass
         
     def moveRelative(self,dU,dV):
         

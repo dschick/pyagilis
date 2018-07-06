@@ -308,3 +308,44 @@ class AGP(object):
             return 2
         elif (status == '00003C') or (status == '00003D'): # error
             return 3
+        
+class AGAP(object):
+    
+    def __init__(self,portName):
+        
+        self.port = AGPort(portName)
+    
+    def moveAbsolute(self,dU,dV):
+        
+        self.port.sendString('1PAU' + str(dU) + '\r\n')
+        self.port.sendString('1PAV' + str(dV) + '\r\n')
+        
+    def moveRelative(self,dU,dV):
+        
+        self.port.sendString('1PRU' + str(dU) + '\r\n')
+        self.port.sendString('1PRV' + str(dV) + '\r\n')
+        
+    def stop(self):
+        
+        self.port.sendString('1ST\r\n')
+                
+    def getCurrentPosition(self):
+        posU, posV = self.port.sendString('1TP?\r\n')
+        return float(posU), float(posV)
+    
+    def getSystemResolution(self):
+        
+        return float(self.port.sendString('1SU?\r\n'))
+        
+    def getStatus(self):
+        status = (self.port.sendString('1TS?\r\n'))
+        print(status)
+        
+        if (status == '000014') :
+            return 0 # configuration
+        elif (status == '000032') or (status == '000033')  or (status == '000034')  or (status == '000035')  or (status == '000036'): # ready from homing or moving or disabled
+            return 1
+        elif (status == '000028') or (status == '000029') or (status == '000046'): # homing or moving
+            return 2
+        elif (status == '00003C') or (status == '00003D'): # error
+            return 3

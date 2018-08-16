@@ -32,7 +32,7 @@ class AGPort(s.Serial):
             self.soul = None
             return None
         try:
-            super(AGPort,self).__init__(portName,921600,s.EIGHTBITS,s.PARITY_NONE,s.STOPBITS_ONE)
+            super(AGPort,self).__init__(portName,921600,s.EIGHTBITS,s.PARITY_NONE,s.STOPBITS_ONE, timeout=1)
             self.soul = 'p'
         except Exception as e:
             print('I could not find or open the port you specified: {0}'.format(portName))
@@ -63,8 +63,11 @@ class AGPort(s.Serial):
         bCommand = bytes(command)#,'UTF-8')
         self.write(bCommand)
         if self.isAquery(command):
-            response = self.readline()
-            return response[3:-2]
-    
+            try:
+                response = self.readline()
+                return response[3:-2]
+            except:
+                print('Serial Timeout')
+                return 0
     
  
